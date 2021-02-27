@@ -18,4 +18,5 @@ public class Message {
     private final String recipient;
     private final String body;
     private final MessageChannel channel;
+    private final MessageStatus status;
 }

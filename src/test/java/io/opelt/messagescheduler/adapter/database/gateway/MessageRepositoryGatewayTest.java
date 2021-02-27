@@ -28,7 +28,7 @@ class MessageRepositoryGatewayTest {
 
     @Test
     void givenACreateMessageWhenSaveThenMapAndCallRepository() {
-        var createMessage = CreateMessage.builder().build();
+        var createMessage = Message.builder().build();
         var mappedEntity = MessageEntity.builder().build();
         var savedEntity = MessageEntity.builder().build();
         var savedMessage = Message.builder().build();

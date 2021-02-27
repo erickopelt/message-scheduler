@@ -2,6 +2,7 @@ package io.opelt.messagescheduler.adapter.database.mapper;
 
 import io.opelt.messagescheduler.adapter.database.entity.MessageEntity;
 import io.opelt.messagescheduler.domain.CreateMessage;
+import io.opelt.messagescheduler.domain.Message;
 import io.opelt.messagescheduler.domain.MessageChannel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,8 @@ class MessageEntityMapperTest {
 
     @Test
     void givenACreateMessageWhenMapThenReturnEntity() {
-        var createMessage = CreateMessage.builder()
+        var createMessage = Message.builder()
+                .id(UUID.randomUUID().toString())
                 .schedule(LocalDateTime.now())
                 .body("test")
                 .channel(MessageChannel.EMAIL)
@@ -31,7 +33,7 @@ class MessageEntityMapperTest {
 
         var entity = mapper.from(createMessage);
 
-        assertThat(entity.getId()).isNull();
+        assertThat(entity.getId()).isEqualTo(createMessage.getId());
         assertThat(entity.getBody()).isEqualTo(createMessage.getBody());
         assertThat(entity.getRecipient()).isEqualTo(createMessage.getRecipient());
         assertThat(entity.getSchedule()).isEqualTo(createMessage.getSchedule());

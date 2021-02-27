@@ -1,8 +1,8 @@
 package io.opelt.messagescheduler.usecase;
 
 import io.opelt.messagescheduler.domain.CreateMessage;
-import io.opelt.messagescheduler.domain.Message;
 import io.opelt.messagescheduler.domain.MessageChannel;
+import io.opelt.messagescheduler.domain.MessageStatus;
 import io.opelt.messagescheduler.usecase.port.MessageRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -34,21 +33,18 @@ class ScheduleMessageTest {
                 .recipient("erick@opelt.dev")
                 .build();
 
-        var message = Message.builder()
-                .id(UUID.randomUUID().toString())
-                .schedule(LocalDateTime.now())
-                .body("test")
-                .channel(MessageChannel.EMAIL)
-                .recipient("erick@opelt.dev")
-                .build();
-
-        when(repository.save(createMessage)).thenReturn(message);
+        when(repository.save(any())).thenAnswer(answer -> answer.getArgument(0));
 
         var scheduledMessage = scheduleMessage.schedule(createMessage);
 
-        assertThat(scheduledMessage).isEqualTo(message);
+        assertThat(scheduledMessage.getId()).isNull();
+        assertThat(scheduledMessage.getSchedule()).isEqualTo(createMessage.getSchedule());
+        assertThat(scheduledMessage.getBody()).isEqualTo(createMessage.getBody());
+        assertThat(scheduledMessage.getRecipient()).isEqualTo(createMessage.getRecipient());
+        assertThat(scheduledMessage.getChannel()).isEqualTo(createMessage.getChannel());
+        assertThat(scheduledMessage.getStatus()).isEqualTo(MessageStatus.SCHEDULED);
 
-        verify(repository).save(createMessage);
+        verify(repository).save(scheduledMessage);
         verifyNoMoreInteractions(repository);
     }
 }

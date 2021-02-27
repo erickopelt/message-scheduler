@@ -1,19 +1,19 @@
 package io.opelt.messagescheduler.adapter.database.mapper;
 
 import io.opelt.messagescheduler.adapter.database.entity.MessageEntity;
-import io.opelt.messagescheduler.domain.CreateMessage;
 import io.opelt.messagescheduler.domain.Message;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MessageEntityMapper {
 
-    public MessageEntity from(CreateMessage createMessage) {
+    public MessageEntity from(Message message) {
         return MessageEntity.builder()
-                .body(createMessage.getBody())
-                .channel(createMessage.getChannel())
-                .recipient(createMessage.getRecipient())
-                .schedule(createMessage.getSchedule())
+                .id(message.getId())
+                .body(message.getBody())
+                .channel(message.getChannel())
+                .recipient(message.getRecipient())
+                .schedule(message.getSchedule())
                 .build();
     }
 
