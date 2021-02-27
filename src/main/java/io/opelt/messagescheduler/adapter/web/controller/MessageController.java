@@ -3,14 +3,12 @@ package io.opelt.messagescheduler.adapter.web.controller;
 import io.opelt.messagescheduler.adapter.web.mapper.MessageModelAssembler;
 import io.opelt.messagescheduler.adapter.web.model.CreateMessageModel;
 import io.opelt.messagescheduler.adapter.web.model.MessageModel;
+import io.opelt.messagescheduler.usecase.FindMessage;
 import io.opelt.messagescheduler.usecase.ScheduleMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -23,6 +21,7 @@ public class MessageController {
 
     private final MessageModelAssembler modelAssembler;
     private final ScheduleMessage scheduleMessage;
+    private final FindMessage findMessage;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<MessageModel> create(@RequestBody @Valid CreateMessageModel createMessageModel) {
@@ -32,5 +31,12 @@ public class MessageController {
         return ResponseEntity
                 .created(mappedMessage.getRequiredLink(SELF).toUri())
                 .body(mappedMessage);
+    }
+
+    @GetMapping(path = "/{id}")
+    ResponseEntity<MessageModel> getById(@PathVariable("id") String id) throws Exception {
+        var message = findMessage.findById(id);
+        var messageModel = modelAssembler.toModel(message);
+        return ResponseEntity.ok(messageModel);
     }
 }
