@@ -7,6 +7,8 @@ import io.opelt.messagescheduler.usecase.port.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class MessageRepositoryGateway implements MessageRepository {
@@ -19,5 +21,10 @@ public class MessageRepositoryGateway implements MessageRepository {
         var entity = mapper.from(message);
         var savedEntity = repository.save(entity);
         return mapper.to(savedEntity);
+    }
+
+    @Override
+    public Optional<Message> findById(String id) {
+        return repository.findById(id).map(mapper::to);
     }
 }
