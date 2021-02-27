@@ -37,6 +37,7 @@ class MessageModelAssemblerTest {
         assertThat(model.getRecipient()).isEqualTo(message.getRecipient());
         assertThat(model.getSchedule()).isEqualTo(message.getSchedule());
         assertThat(model.getChannel()).isEqualTo(message.getChannel());
+        assertThat(model.getStatus()).isEqualTo(message.getStatus());
     }
 
     @Test

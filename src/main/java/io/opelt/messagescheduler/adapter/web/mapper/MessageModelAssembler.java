@@ -28,6 +28,7 @@ public class MessageModelAssembler extends RepresentationModelAssemblerSupport<M
                 .recipient(message.getRecipient())
                 .channel(message.getChannel())
                 .schedule(message.getSchedule())
+                .status(message.getStatus())
                 .build();
     }
 

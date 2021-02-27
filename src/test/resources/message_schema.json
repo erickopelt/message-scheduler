@@ -19,6 +19,9 @@
     "channel": {
       "type": "string"
     },
+    "status": {
+      "type": "string"
+    },
     "_links": {
       "type": "object",
       "additionalProperties": false,
@@ -43,6 +46,8 @@
     "schedule",
     "recipient",
     "body",
-    "channel"
+    "channel",
+    "status",
+    "_links"
   ]
 }

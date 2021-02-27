@@ -66,6 +66,7 @@ class MessageControllerIT {
                 .body("recipient", equalTo("erick@opelt.dev"))
                 .body("channel", equalTo("EMAIL"))
                 .body("body", equalTo("Hello"))
+                .body("status", equalTo("SCHEDULED"))
                 .body("_links.self.href", matchMessageResourceURI());
     }
 

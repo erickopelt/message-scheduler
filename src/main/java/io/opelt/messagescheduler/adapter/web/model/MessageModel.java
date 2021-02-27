@@ -1,8 +1,9 @@
 package io.opelt.messagescheduler.adapter.web.model;
 
 import io.opelt.messagescheduler.domain.MessageChannel;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import io.opelt.messagescheduler.domain.MessageStatus;
+import lombok.Builder;
+import lombok.Getter;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -13,9 +14,10 @@ import java.time.LocalDateTime;
 @Relation(collectionRelation = "messages", itemRelation = "message")
 public class MessageModel extends RepresentationModel<MessageModel> {
 
-    private String id;
-    private LocalDateTime schedule;
-    private String recipient;
-    private String body;
-    private MessageChannel channel;
+    private final String id;
+    private final LocalDateTime schedule;
+    private final String recipient;
+    private final String body;
+    private final MessageChannel channel;
+    private final MessageStatus status;
 }
