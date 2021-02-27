@@ -15,7 +15,7 @@ public class MessageModel extends RepresentationModel<MessageModel> {
 
     private String id;
     private LocalDateTime schedule;
-    private String destiny;
+    private String recipient;
     private String body;
     private MessageChannel channel;
 }

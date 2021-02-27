@@ -25,7 +25,7 @@ public class MessageModelAssembler extends RepresentationModelAssemblerSupport<M
         return MessageModel.builder()
                 .id(message.getId())
                 .body(message.getBody())
-                .destiny(message.getDestiny())
+                .recipient(message.getRecipient())
                 .channel(message.getChannel())
                 .schedule(message.getSchedule())
                 .build();
@@ -36,7 +36,7 @@ public class MessageModelAssembler extends RepresentationModelAssemblerSupport<M
                 .channel(createMessageModel.getChannel())
                 .body(createMessageModel.getBody())
                 .schedule(createMessageModel.getSchedule())
-                .destiny(createMessageModel.getDestiny())
+                .recipient(createMessageModel.getRecipient())
                 .build();
     }
 

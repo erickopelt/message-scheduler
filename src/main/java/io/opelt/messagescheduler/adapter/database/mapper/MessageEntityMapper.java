@@ -12,7 +12,7 @@ public class MessageEntityMapper {
         return MessageEntity.builder()
                 .body(createMessage.getBody())
                 .channel(createMessage.getChannel())
-                .destiny(createMessage.getDestiny())
+                .recipient(createMessage.getRecipient())
                 .schedule(createMessage.getSchedule())
                 .build();
     }
@@ -22,7 +22,7 @@ public class MessageEntityMapper {
                 .body(entity.getBody())
                 .id(entity.getId())
                 .channel(entity.getChannel())
-                .destiny(entity.getDestiny())
+                .recipient(entity.getRecipient())
                 .schedule(entity.getSchedule())
                 .build();
     }

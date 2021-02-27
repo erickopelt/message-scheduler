@@ -31,7 +31,7 @@ class ScheduleMessageTest {
                 .schedule(LocalDateTime.now())
                 .body("test")
                 .channel(MessageChannel.EMAIL)
-                .destiny("erick@opelt.dev")
+                .recipient("erick@opelt.dev")
                 .build();
 
         var message = Message.builder()
@@ -39,7 +39,7 @@ class ScheduleMessageTest {
                 .schedule(LocalDateTime.now())
                 .body("test")
                 .channel(MessageChannel.EMAIL)
-                .destiny("erick@opelt.dev")
+                .recipient("erick@opelt.dev")
                 .build();
 
         when(repository.save(createMessage)).thenReturn(message);

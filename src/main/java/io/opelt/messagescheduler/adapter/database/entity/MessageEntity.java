@@ -23,7 +23,7 @@ public class MessageEntity {
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
     private LocalDateTime schedule;
-    private String destiny;
+    private String recipient;
     private String body;
     @Enumerated(EnumType.STRING)
     private MessageChannel channel;

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class CreateMessage {
 
     private final LocalDateTime schedule;
-    private final String destiny;
+    private final String recipient;
     private final String body;
     private final MessageChannel channel;
 }

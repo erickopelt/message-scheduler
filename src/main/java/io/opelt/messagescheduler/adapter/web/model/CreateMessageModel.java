@@ -15,7 +15,7 @@ public class CreateMessageModel {
     @NotNull
     private final LocalDateTime schedule;
     @NotBlank
-    private final String destiny;
+    private final String recipient;
     @NotBlank
     private final String body;
     @NotNull

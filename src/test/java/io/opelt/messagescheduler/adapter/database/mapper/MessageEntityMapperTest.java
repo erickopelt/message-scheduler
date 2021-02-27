@@ -26,14 +26,14 @@ class MessageEntityMapperTest {
                 .schedule(LocalDateTime.now())
                 .body("test")
                 .channel(MessageChannel.EMAIL)
-                .destiny("erick@opelt.dev")
+                .recipient("erick@opelt.dev")
                 .build();
 
         var entity = mapper.from(createMessage);
 
         assertThat(entity.getId()).isNull();
         assertThat(entity.getBody()).isEqualTo(createMessage.getBody());
-        assertThat(entity.getDestiny()).isEqualTo(createMessage.getDestiny());
+        assertThat(entity.getRecipient()).isEqualTo(createMessage.getRecipient());
         assertThat(entity.getSchedule()).isEqualTo(createMessage.getSchedule());
         assertThat(entity.getChannel()).isEqualTo(createMessage.getChannel());
     }
@@ -45,14 +45,14 @@ class MessageEntityMapperTest {
                 .schedule(LocalDateTime.now())
                 .body("test")
                 .channel(MessageChannel.EMAIL)
-                .destiny("erick@opelt.dev")
+                .recipient("erick@opelt.dev")
                 .build();
 
         var message = mapper.to(entity);
 
         assertThat(message.getId()).isEqualTo(entity.getId());
         assertThat(message.getBody()).isEqualTo(entity.getBody());
-        assertThat(message.getDestiny()).isEqualTo(entity.getDestiny());
+        assertThat(message.getRecipient()).isEqualTo(entity.getRecipient());
         assertThat(message.getSchedule()).isEqualTo(entity.getSchedule());
         assertThat(message.getChannel()).isEqualTo(entity.getChannel());
     }

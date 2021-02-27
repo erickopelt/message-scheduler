@@ -10,7 +10,7 @@
     "schedule": {
       "type": "string"
     },
-    "destiny": {
+    "recipient": {
       "type": "string"
     },
     "body": {
@@ -41,7 +41,7 @@
   "required": [
     "id",
     "schedule",
-    "destiny",
+    "recipient",
     "body",
     "channel"
   ]

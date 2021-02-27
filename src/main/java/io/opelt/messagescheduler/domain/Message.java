@@ -15,7 +15,7 @@ public class Message {
 
     private final String id;
     private final LocalDateTime schedule;
-    private final String destiny;
+    private final String recipient;
     private final String body;
     private final MessageChannel channel;
 }
