@@ -1,7 +1,6 @@
 package io.opelt.messagescheduler.adapter.database.mapper;
 
 import io.opelt.messagescheduler.adapter.database.entity.MessageEntity;
-import io.opelt.messagescheduler.domain.CreateMessage;
 import io.opelt.messagescheduler.domain.Message;
 import io.opelt.messagescheduler.domain.MessageChannel;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +37,7 @@ class MessageEntityMapperTest {
         assertThat(entity.getRecipient()).isEqualTo(createMessage.getRecipient());
         assertThat(entity.getSchedule()).isEqualTo(createMessage.getSchedule());
         assertThat(entity.getChannel()).isEqualTo(createMessage.getChannel());
+        assertThat(entity.getStatus()).isEqualTo(createMessage.getStatus());
     }
 
     @Test
@@ -57,5 +57,6 @@ class MessageEntityMapperTest {
         assertThat(message.getRecipient()).isEqualTo(entity.getRecipient());
         assertThat(message.getSchedule()).isEqualTo(entity.getSchedule());
         assertThat(message.getChannel()).isEqualTo(entity.getChannel());
+        assertThat(message.getStatus()).isEqualTo(entity.getStatus());
     }
 }

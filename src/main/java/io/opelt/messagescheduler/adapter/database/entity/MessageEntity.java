@@ -1,6 +1,7 @@
 package io.opelt.messagescheduler.adapter.database.entity;
 
 import io.opelt.messagescheduler.domain.MessageChannel;
+import io.opelt.messagescheduler.domain.MessageStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,4 +28,6 @@ public class MessageEntity {
     private String body;
     @Enumerated(EnumType.STRING)
     private MessageChannel channel;
+    @Enumerated(EnumType.STRING)
+    private MessageStatus status;
 }

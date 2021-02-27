@@ -14,6 +14,7 @@ public class MessageEntityMapper {
                 .channel(message.getChannel())
                 .recipient(message.getRecipient())
                 .schedule(message.getSchedule())
+                .status(message.getStatus())
                 .build();
     }
 
@@ -24,6 +25,7 @@ public class MessageEntityMapper {
                 .channel(entity.getChannel())
                 .recipient(entity.getRecipient())
                 .schedule(entity.getSchedule())
+                .status(entity.getStatus())
                 .build();
     }
 }
