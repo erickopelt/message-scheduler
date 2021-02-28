@@ -59,5 +59,24 @@ class MessageRepositoryGatewayTest {
         var foundMessage = gateway.findById(id);
 
         assertThat(foundMessage).isPresent().get().isEqualTo(message);
+
+        verify(repository).findById(id);
+        verify(mapper).to(entity);
+        verifyNoMoreInteractions(repository, mapper);
     }
+
+    @Test
+    void givenAMessageWhenDeleteThenMapAndCallRepository() {
+        var message = Message.builder().build();
+        var entity = MessageEntity.builder().build();
+
+        when(mapper.from(message)).thenReturn(entity);
+
+        gateway.delete(message);
+
+        verify(mapper).from(message);
+        verify(repository).delete(entity);
+        verifyNoMoreInteractions(mapper, repository);
+    }
+
 }

@@ -9,4 +9,6 @@ public interface MessageRepository {
     Message save(Message message);
 
     Optional<Message> findById(String id);
+
+    void delete(Message message);
 }

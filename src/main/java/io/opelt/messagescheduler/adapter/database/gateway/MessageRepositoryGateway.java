@@ -27,4 +27,9 @@ public class MessageRepositoryGateway implements MessageRepository {
     public Optional<Message> findById(String id) {
         return repository.findById(id).map(mapper::to);
     }
+
+    @Override
+    public void delete(Message message) {
+        repository.delete(mapper.from(message));
+    }
 }
