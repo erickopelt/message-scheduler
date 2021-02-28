@@ -82,6 +82,77 @@ class MessageControllerIT {
     }
 
     @Test
+    void givenAMessageWithoutRecipientFieldWhenPostThenReturnBadRequest() throws Exception {
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        RestAssured
+                .given()
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(new JSONObject()
+                        .put("schedule", schedule)
+                        .put("body", "Hello")
+                        .put("channel", "EMAIL")
+                        .toString())
+                .when()
+                .post("/v1/messages")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", equalTo("Field 'recipient' error: must not be blank"));
+    }
+
+    @Test
+    void givenAMessageWithoutBodyFieldWhenPostThenReturnBadRequest() throws Exception {
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        RestAssured
+                .given()
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(new JSONObject()
+                        .put("schedule", schedule)
+                        .put("recipient", "erick@opelt.dev")
+                        .put("channel", "EMAIL")
+                        .toString())
+                .when()
+                .post("/v1/messages")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", equalTo("Field 'body' error: must not be blank"));
+    }
+
+    @Test
+    void givenAMessageWithoutChannelFieldWhenPostThenReturnBadRequest() throws Exception {
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        RestAssured
+                .given()
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(new JSONObject()
+                        .put("schedule", schedule)
+                        .put("recipient", "erick@opelt.dev")
+                        .put("body", "Hello")
+                        .toString())
+                .when()
+                .post("/v1/messages")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", equalTo("Field 'channel' error: must not be null"));
+    }
+
+    @Test
+    void givenAMessageWithoutScheduleFieldWhenPostThenReturnBadRequest() throws Exception {
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        RestAssured
+                .given()
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(new JSONObject()
+                        .put("recipient", "erick@opelt.dev")
+                        .put("body", "Hello")
+                        .put("channel", "EMAIL")
+                        .toString())
+                .when()
+                .post("/v1/messages")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     void givenAMessageWithPastScheduleWhenScheduleThenReturnBadRequest() throws Exception {
         var schedule = LocalDateTime.now().minusMinutes(5).toString();
         RestAssured
@@ -96,7 +167,8 @@ class MessageControllerIT {
                 .when()
                 .post("/v1/messages")
                 .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", equalTo(String.format("Schedule field schedule=%s must have a future date-time", schedule)));
     }
 
     @Test
