@@ -3,6 +3,7 @@ package io.opelt.messagescheduler.usecase;
 import io.opelt.messagescheduler.domain.CreateMessage;
 import io.opelt.messagescheduler.domain.MessageChannel;
 import io.opelt.messagescheduler.domain.MessageStatus;
+import io.opelt.messagescheduler.usecase.exception.MessageScheduleMustHaveAFutureValueException;
 import io.opelt.messagescheduler.usecase.port.MessageRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,9 +27,9 @@ class ScheduleMessageTest {
     private MessageRepository repository;
 
     @Test
-    void givenAMessageWhenScheduleThenReturnScheduledMessage() {
+    void givenAMessageWhenScheduleThenReturnScheduledMessage() throws MessageScheduleMustHaveAFutureValueException {
         var createMessage = CreateMessage.builder()
-                .schedule(LocalDateTime.now())
+                .schedule(LocalDateTime.now().plusMinutes(5))
                 .body("test")
                 .channel(MessageChannel.EMAIL)
                 .recipient("erick@opelt.dev")
@@ -46,5 +48,23 @@ class ScheduleMessageTest {
 
         verify(repository).save(scheduledMessage);
         verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    void givenAMessageWithPastScheduleWhenScheduleThenThrowException() {
+        var schedule = LocalDateTime.now().minusMinutes(1);
+        var createMessage = CreateMessage.builder()
+                .schedule(schedule)
+                .body("test")
+                .channel(MessageChannel.EMAIL)
+                .recipient("erick@opelt.dev")
+                .build();
+
+
+        assertThatThrownBy(() -> scheduleMessage.schedule(createMessage))
+            .isInstanceOf(MessageScheduleMustHaveAFutureValueException.class)
+            .hasMessage(String.format("Schedule field schedule=%s must have a future date-time", schedule.toString()));
+
+        verifyNoInteractions(repository);
     }
 }

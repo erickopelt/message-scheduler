@@ -1,10 +1,12 @@
 package io.opelt.messagescheduler.adapter.web.model;
 
-import com.sun.istack.NotNull;
 import io.opelt.messagescheduler.domain.MessageChannel;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter

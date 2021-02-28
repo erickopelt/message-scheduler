@@ -6,6 +6,7 @@ import io.opelt.messagescheduler.adapter.web.model.MessageModel;
 import io.opelt.messagescheduler.usecase.CancelScheduleMessage;
 import io.opelt.messagescheduler.usecase.FindMessage;
 import io.opelt.messagescheduler.usecase.ScheduleMessage;
+import io.opelt.messagescheduler.usecase.exception.MessageScheduleMustHaveAFutureValueException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class MessageController {
     private final CancelScheduleMessage cancelScheduleMessage;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<MessageModel> create(@RequestBody @Valid CreateMessageModel createMessageModel) {
+    ResponseEntity<MessageModel> create(@RequestBody @Valid CreateMessageModel createMessageModel) throws MessageScheduleMustHaveAFutureValueException {
         var createMessage = modelAssembler.toDomain(createMessageModel);
         var savedMessage = scheduleMessage.schedule(createMessage);
         var mappedMessage = modelAssembler.toModel(savedMessage);

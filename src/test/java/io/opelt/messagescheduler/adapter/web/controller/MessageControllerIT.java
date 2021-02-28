@@ -12,10 +12,11 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.time.LocalDateTime;
+
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.apache.http.HttpHeaders.LOCATION;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.matchesRegex;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,15 +33,17 @@ class MessageControllerIT {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
     @Test
     void givenAMessageWhenPostThenReturnResponseWithValidSchema() throws Exception {
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
         RestAssured
                 .given()
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(new JSONObject()
-                        .put("schedule", "2021-02-26T20:13:23.47")
+                        .put("schedule", schedule)
                         .put("recipient", "erick@opelt.dev")
                         .put("body", "Hello")
                         .put("channel", "EMAIL")
@@ -54,11 +57,12 @@ class MessageControllerIT {
 
     @Test
     void givenAMessageWhenPostThenReturnBodyWithLinks() throws Exception {
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
         RestAssured
                 .given()
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(new JSONObject()
-                        .put("schedule", "2021-02-26T20:13:23.47")
+                        .put("schedule", schedule)
                         .put("recipient", "erick@opelt.dev")
                         .put("body", "Hello")
                         .put("channel", "EMAIL")
@@ -69,7 +73,7 @@ class MessageControllerIT {
                 .statusCode(HttpStatus.CREATED.value())
                 .header(LOCATION, matchMessageResourceURI())
                 .body("id", matchesRegex(UUID_REGEX))
-                .body("schedule", equalTo("2021-02-26T20:13:23.47"))
+                .body("schedule", equalTo(schedule))
                 .body("recipient", equalTo("erick@opelt.dev"))
                 .body("channel", equalTo("EMAIL"))
                 .body("body", equalTo("Hello"))
@@ -78,8 +82,27 @@ class MessageControllerIT {
     }
 
     @Test
+    void givenAMessageWithPastScheduleWhenScheduleThenReturnBadRequest() throws Exception {
+        var schedule = LocalDateTime.now().minusMinutes(5).toString();
+        RestAssured
+                .given()
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(new JSONObject()
+                        .put("schedule", schedule)
+                        .put("recipient", "erick@opelt.dev")
+                        .put("body", "Hello")
+                        .put("channel", "EMAIL")
+                        .toString())
+                .when()
+                .post("/v1/messages")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     void givenAMessageIdWhenGetThenReturnResponseWithValidSchema() throws Exception {
-        var id = createMessage();
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var id = createMessage(schedule);
 
         RestAssured
                 .given()
@@ -94,7 +117,8 @@ class MessageControllerIT {
 
     @Test
     void givenAMessageIdWhenGetThenReturnBodyWithLinks() throws Exception {
-        var id = createMessage();
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var id = createMessage(schedule);
 
         RestAssured
                 .given()
@@ -103,13 +127,13 @@ class MessageControllerIT {
                 .get("/v1/messages/{id}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("id", matchesRegex(UUID_REGEX))
-                .body("schedule", equalTo("2021-02-26T20:13:23.47"))
+                .body("id", equalTo(id))
+                .body("schedule", notNullValue())
                 .body("recipient", equalTo("erick@opelt.dev"))
                 .body("channel", equalTo("EMAIL"))
                 .body("body", equalTo("Hello"))
                 .body("status", equalTo("SCHEDULED"))
-                .body("_links.self.href", matchMessageResourceURI());
+                .body("_links.self.href", matchMessageResourceURIWithId(id));
     }
 
     @Test
@@ -129,7 +153,8 @@ class MessageControllerIT {
 
     @Test
     void givenAScheduledMessageWhenDeleteThenReturnNoContent() throws Exception {
-        var id = createMessage();
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var id = createMessage(schedule);
 
         RestAssured
                 .given()
@@ -144,7 +169,8 @@ class MessageControllerIT {
 
     @Test
     void givenASentMessageWhenDeleteThenReturnBadRequest() throws Exception {
-        var id = createMessage();
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var id = createMessage(schedule);
         sendMessage(id);
 
         RestAssured
@@ -178,12 +204,17 @@ class MessageControllerIT {
         return matchesRegex(baseURI + UUID_REGEX);
     }
 
-    private String createMessage() throws JSONException {
+    private Matcher<String> matchMessageResourceURIWithId(String id) {
+        var baseURI = String.format("http://localhost:%d/v1/messages/", port);
+        return matchesRegex(baseURI + id);
+    }
+
+    private String createMessage(String schedule) throws JSONException {
         return RestAssured
                 .given()
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(new JSONObject()
-                        .put("schedule", "2021-02-26T20:13:23.47")
+                        .put("schedule", schedule)
                         .put("recipient", "erick@opelt.dev")
                         .put("body", "Hello")
                         .put("channel", "EMAIL")
