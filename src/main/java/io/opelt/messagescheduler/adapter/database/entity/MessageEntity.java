@@ -1,18 +1,25 @@
 package io.opelt.messagescheduler.adapter.database.entity;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
+
 import io.opelt.messagescheduler.domain.MessageChannel;
 import io.opelt.messagescheduler.domain.MessageStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
-@Table
+@Table(name = "MESSAGE")
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor

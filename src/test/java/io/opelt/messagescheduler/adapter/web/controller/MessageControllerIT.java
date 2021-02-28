@@ -1,6 +1,14 @@
 package io.opelt.messagescheduler.adapter.web.controller;
 
-import io.restassured.RestAssured;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.apache.http.HttpHeaders.LOCATION;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.matchesRegex;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+import java.time.LocalDateTime;
+
 import org.hamcrest.Matcher;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,12 +20,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.time.LocalDateTime;
-
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.apache.http.HttpHeaders.LOCATION;
-import static org.hamcrest.Matchers.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MessageControllerIT {
@@ -300,7 +303,7 @@ class MessageControllerIT {
     }
 
     private void sendMessage(String id) {
-        jdbcTemplate.update("UPDATE MESSAGE_ENTITY SET status = 'SENT' WHERE ID=?", id);
+        jdbcTemplate.update("UPDATE MESSAGE SET status = 'SENT' WHERE ID=?", id);
     }
 
 }
