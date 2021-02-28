@@ -3,6 +3,7 @@ package io.opelt.messagescheduler.adapter.web.controller;
 import io.opelt.messagescheduler.adapter.web.mapper.MessageModelAssembler;
 import io.opelt.messagescheduler.adapter.web.model.CreateMessageModel;
 import io.opelt.messagescheduler.adapter.web.model.MessageModel;
+import io.opelt.messagescheduler.usecase.CancelScheduleMessage;
 import io.opelt.messagescheduler.usecase.FindMessage;
 import io.opelt.messagescheduler.usecase.ScheduleMessage;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class MessageController {
     private final MessageModelAssembler modelAssembler;
     private final ScheduleMessage scheduleMessage;
     private final FindMessage findMessage;
+    private final CancelScheduleMessage cancelScheduleMessage;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<MessageModel> create(@RequestBody @Valid CreateMessageModel createMessageModel) {
@@ -38,5 +40,11 @@ public class MessageController {
         var message = findMessage.findById(id);
         var messageModel = modelAssembler.toModel(message);
         return ResponseEntity.ok(messageModel);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    ResponseEntity<Void> cancel(@PathVariable("id") String id) throws Exception {
+       cancelScheduleMessage.cancel(id);
+       return ResponseEntity.noContent().build();
     }
 }
