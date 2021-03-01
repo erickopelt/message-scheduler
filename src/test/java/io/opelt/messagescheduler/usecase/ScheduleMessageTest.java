@@ -1,21 +1,27 @@
 package io.opelt.messagescheduler.usecase;
 
-import io.opelt.messagescheduler.domain.CreateMessage;
-import io.opelt.messagescheduler.domain.MessageChannel;
-import io.opelt.messagescheduler.domain.MessageStatus;
-import io.opelt.messagescheduler.usecase.exception.MessageScheduleMustHaveAFutureValueException;
-import io.opelt.messagescheduler.usecase.port.MessageRepository;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import io.opelt.messagescheduler.domain.CreateMessage;
+import io.opelt.messagescheduler.domain.MessageChannel;
+import io.opelt.messagescheduler.domain.MessageStatus;
+import io.opelt.messagescheduler.usecase.exception.MessageScheduleMustHaveAFutureValueException;
+import io.opelt.messagescheduler.usecase.port.MessageRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleMessageTest {
@@ -63,7 +69,7 @@ class ScheduleMessageTest {
 
         assertThatThrownBy(() -> scheduleMessage.schedule(createMessage))
             .isInstanceOf(MessageScheduleMustHaveAFutureValueException.class)
-            .hasMessage(String.format("Schedule field schedule=%s must have a future date-time", schedule.toString()));
+            .hasMessage(String.format("Schedule field schedule=%s must have a future date-time", schedule.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS"))));
 
         verifyNoInteractions(repository);
     }
