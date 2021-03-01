@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.hamcrest.Matcher;
 import org.json.JSONException;
@@ -28,6 +29,7 @@ import io.restassured.RestAssured;
 class MessageControllerTest {
 
     private static final String UUID_REGEX = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}";
+    private static final DateTimeFormatter ISO_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS");
 
     @LocalServerPort
     private int port;
@@ -43,7 +45,7 @@ class MessageControllerTest {
 
     @Test
     void givenAMessageWhenPostThenReturnResponseWithValidSchema() throws Exception {
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         RestAssured
                 .given()
                 .contentType(APPLICATION_JSON_VALUE)
@@ -62,7 +64,7 @@ class MessageControllerTest {
 
     @Test
     void givenAMessageWhenPostThenReturnBodyWithLinks() throws Exception {
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         RestAssured
                 .given()
                 .contentType(APPLICATION_JSON_VALUE)
@@ -88,7 +90,7 @@ class MessageControllerTest {
 
     @Test
     void givenAMessageWithoutRecipientFieldWhenPostThenReturnBadRequest() throws Exception {
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         RestAssured
                 .given()
                 .contentType(APPLICATION_JSON_VALUE)
@@ -106,7 +108,7 @@ class MessageControllerTest {
 
     @Test
     void givenAMessageWithoutBodyFieldWhenPostThenReturnBadRequest() throws Exception {
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         RestAssured
                 .given()
                 .contentType(APPLICATION_JSON_VALUE)
@@ -124,7 +126,7 @@ class MessageControllerTest {
 
     @Test
     void givenAMessageWithoutChannelFieldWhenPostThenReturnBadRequest() throws Exception {
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         RestAssured
                 .given()
                 .contentType(APPLICATION_JSON_VALUE)
@@ -142,7 +144,7 @@ class MessageControllerTest {
 
     @Test
     void givenAMessageWithoutScheduleFieldWhenPostThenReturnBadRequest() throws Exception {
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         RestAssured
                 .given()
                 .contentType(APPLICATION_JSON_VALUE)
@@ -159,7 +161,7 @@ class MessageControllerTest {
 
     @Test
     void givenAMessageWithPastScheduleWhenScheduleThenReturnBadRequest() throws Exception {
-        var schedule = LocalDateTime.now().minusMinutes(5).toString();
+        var schedule = LocalDateTime.now().minusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         RestAssured
                 .given()
                 .contentType(APPLICATION_JSON_VALUE)
@@ -178,7 +180,7 @@ class MessageControllerTest {
 
     @Test
     void givenAMessageIdWhenGetThenReturnResponseWithValidSchema() throws Exception {
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         var id = createMessage(schedule, "EMAIL");
 
         RestAssured
@@ -194,7 +196,7 @@ class MessageControllerTest {
 
     @Test
     void givenAMessageIdWhenGetThenReturnBodyWithLinks() throws Exception {
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         var id = createMessage(schedule, "EMAIL");
 
         RestAssured
@@ -228,7 +230,7 @@ class MessageControllerTest {
 
     @Test
     void givenAScheduledMessageWhenDeleteThenReturnNoContent() throws Exception {
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         var id = createMessage(schedule, "EMAIL");
 
         RestAssured
@@ -242,7 +244,7 @@ class MessageControllerTest {
 
     @Test
     void givenASentMessageWhenDeleteThenReturnBadRequest() throws Exception {
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         var id = createMessage(schedule, "EMAIL");
         sendMessage(id);
 
@@ -271,7 +273,7 @@ class MessageControllerTest {
     @Test
     void givenTwoMessagesWhenGetFirstPageThenReturnPage() throws JSONException {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "MESSAGE");
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         var id = createMessage(schedule, "EMAIL");
 
         RestAssured
@@ -300,7 +302,7 @@ class MessageControllerTest {
     @Test
     void givenTwoMessagesWhenGetPageWithChannelFilterThenReturnPage() throws JSONException {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "MESSAGE");
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         createMessage(schedule, "EMAIL");
         var smsId = createMessage(schedule, "SMS");
 
@@ -331,7 +333,7 @@ class MessageControllerTest {
     @Test
     void givenTwoMessagesWhenGetPageWithStatusFilterThenReturnPage() throws JSONException {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "MESSAGE");
-        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
         createMessage(schedule, "EMAIL");
         var sentId = createMessage(schedule, "EMAIL");
         sendMessage(sentId);
@@ -383,6 +385,7 @@ class MessageControllerTest {
                 .when()
                 .post("/v1/messages")
                 .then()
+                .statusCode(HttpStatus.CREATED.value())
                 .extract()
                 .jsonPath()
                 .getString("id");
