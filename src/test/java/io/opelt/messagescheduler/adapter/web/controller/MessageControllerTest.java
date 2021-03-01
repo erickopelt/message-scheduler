@@ -3,6 +3,7 @@ package io.opelt.messagescheduler.adapter.web.controller;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.apache.http.HttpHeaders.LOCATION;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.matchesRegex;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import io.restassured.RestAssured;
 
@@ -177,7 +179,7 @@ class MessageControllerTest {
     @Test
     void givenAMessageIdWhenGetThenReturnResponseWithValidSchema() throws Exception {
         var schedule = LocalDateTime.now().plusMinutes(5).toString();
-        var id = createMessage(schedule);
+        var id = createMessage(schedule, "EMAIL");
 
         RestAssured
                 .given()
@@ -193,7 +195,7 @@ class MessageControllerTest {
     @Test
     void givenAMessageIdWhenGetThenReturnBodyWithLinks() throws Exception {
         var schedule = LocalDateTime.now().plusMinutes(5).toString();
-        var id = createMessage(schedule);
+        var id = createMessage(schedule, "EMAIL");
 
         RestAssured
                 .given()
@@ -221,15 +223,13 @@ class MessageControllerTest {
                 .when()
                 .get("/v1/messages/{id}")
                 .then()
-                .log()
-                .all()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
     void givenAScheduledMessageWhenDeleteThenReturnNoContent() throws Exception {
         var schedule = LocalDateTime.now().plusMinutes(5).toString();
-        var id = createMessage(schedule);
+        var id = createMessage(schedule, "EMAIL");
 
         RestAssured
                 .given()
@@ -237,15 +237,13 @@ class MessageControllerTest {
                 .when()
                 .delete("/v1/messages/{id}")
                 .then()
-                .log()
-                .all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
     void givenASentMessageWhenDeleteThenReturnBadRequest() throws Exception {
         var schedule = LocalDateTime.now().plusMinutes(5).toString();
-        var id = createMessage(schedule);
+        var id = createMessage(schedule, "EMAIL");
         sendMessage(id);
 
         RestAssured
@@ -254,8 +252,6 @@ class MessageControllerTest {
                 .when()
                 .delete("/v1/messages/{id}")
                 .then()
-                .log()
-                .all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -269,9 +265,99 @@ class MessageControllerTest {
                 .when()
                 .delete("/v1/messages/{id}")
                 .then()
-                .log()
-                .all()
                 .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    void givenTwoMessagesWhenGetFirstPageThenReturnPage() throws JSONException {
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "MESSAGE");
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        var id = createMessage(schedule, "EMAIL");
+
+        RestAssured
+                .given()
+                .queryParam("page", 0)
+                .queryParam("size", 1)
+                .when()
+                .get("/v1/messages")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("_embedded.messages", hasSize(1))
+                .body("_embedded.messages[0].id", equalTo(id))
+                .body("_embedded.messages[0].schedule", notNullValue())
+                .body("_embedded.messages[0].recipient", equalTo("erick@opelt.dev"))
+                .body("_embedded.messages[0].channel", equalTo("EMAIL"))
+                .body("_embedded.messages[0].body", equalTo("Hello"))
+                .body("_embedded.messages[0].status", equalTo("SCHEDULED"))
+                .body("_embedded.messages[0]._links.self.href", matchMessageResourceURIWithId(id))
+                .body("page.size", equalTo(1))
+                .body("page.totalElements", equalTo(1))
+                .body("page.totalPages", equalTo(1))
+                .body("page.number", equalTo(0))
+                .body("_links.self.href", equalTo(String.format("http://localhost:%s/v1/messages?page=0&size=1", port)));
+    }
+
+    @Test
+    void givenTwoMessagesWhenGetPageWithChannelFilterThenReturnPage() throws JSONException {
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "MESSAGE");
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        createMessage(schedule, "EMAIL");
+        var smsId = createMessage(schedule, "SMS");
+
+        RestAssured
+                .given()
+                .queryParam("page", 0)
+                .queryParam("size", 20)
+                .queryParam("channel", "SMS")
+                .when()
+                .get("/v1/messages")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("_embedded.messages", hasSize(1))
+                .body("_embedded.messages[0].id", equalTo(smsId))
+                .body("_embedded.messages[0].schedule", notNullValue())
+                .body("_embedded.messages[0].recipient", equalTo("erick@opelt.dev"))
+                .body("_embedded.messages[0].channel", equalTo("SMS"))
+                .body("_embedded.messages[0].body", equalTo("Hello"))
+                .body("_embedded.messages[0].status", equalTo("SCHEDULED"))
+                .body("_embedded.messages[0]._links.self.href", matchMessageResourceURIWithId(smsId))
+                .body("page.size", equalTo(20))
+                .body("page.totalElements", equalTo(1))
+                .body("page.totalPages", equalTo(1))
+                .body("page.number", equalTo(0))
+                .body("_links.self.href", equalTo(String.format("http://localhost:%s/v1/messages?channel=SMS&page=0&size=20", port)));
+    }
+
+    @Test
+    void givenTwoMessagesWhenGetPageWithStatusFilterThenReturnPage() throws JSONException {
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "MESSAGE");
+        var schedule = LocalDateTime.now().plusMinutes(5).toString();
+        createMessage(schedule, "EMAIL");
+        var sentId = createMessage(schedule, "EMAIL");
+        sendMessage(sentId);
+
+        RestAssured
+                .given()
+                .queryParam("page", 0)
+                .queryParam("size", 20)
+                .queryParam("status", "SENT")
+                .when()
+                .get("/v1/messages")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("_embedded.messages", hasSize(1))
+                .body("_embedded.messages[0].id", equalTo(sentId))
+                .body("_embedded.messages[0].schedule", notNullValue())
+                .body("_embedded.messages[0].recipient", equalTo("erick@opelt.dev"))
+                .body("_embedded.messages[0].channel", equalTo("EMAIL"))
+                .body("_embedded.messages[0].body", equalTo("Hello"))
+                .body("_embedded.messages[0].status", equalTo("SENT"))
+                .body("_embedded.messages[0]._links.self.href", matchMessageResourceURIWithId(sentId))
+                .body("page.size", equalTo(20))
+                .body("page.totalElements", equalTo(1))
+                .body("page.totalPages", equalTo(1))
+                .body("page.number", equalTo(0))
+                .body("_links.self.href", equalTo(String.format("http://localhost:%s/v1/messages?status=SENT&page=0&size=20", port)));
     }
 
     private Matcher<String> matchMessageResourceURI() {
@@ -284,7 +370,7 @@ class MessageControllerTest {
         return matchesRegex(baseURI + id);
     }
 
-    private String createMessage(String schedule) throws JSONException {
+    private String createMessage(String schedule, String email) throws JSONException {
         return RestAssured
                 .given()
                 .contentType(APPLICATION_JSON_VALUE)
@@ -292,7 +378,7 @@ class MessageControllerTest {
                         .put("schedule", schedule)
                         .put("recipient", "erick@opelt.dev")
                         .put("body", "Hello")
-                        .put("channel", "EMAIL")
+                        .put("channel", email)
                         .toString())
                 .when()
                 .post("/v1/messages")
