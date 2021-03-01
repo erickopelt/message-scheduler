@@ -15,12 +15,12 @@ import io.opelt.messagescheduler.domain.MessageChannel;
 import io.opelt.messagescheduler.domain.MessageStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "MESSAGE")
-@Data
+@Getter
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor

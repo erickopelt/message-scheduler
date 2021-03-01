@@ -1,16 +1,12 @@
 package io.opelt.messagescheduler.domain;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
 import java.time.LocalDateTime;
 
-@Builder(toBuilder = true)
+import lombok.Builder;
+import lombok.Getter;
+
 @Getter
-@EqualsAndHashCode
-@ToString
+@Builder
 public class Message {
 
     private final String id;

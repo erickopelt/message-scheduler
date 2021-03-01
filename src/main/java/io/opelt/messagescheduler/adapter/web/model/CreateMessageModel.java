@@ -1,17 +1,16 @@
 package io.opelt.messagescheduler.adapter.web.model;
 
-import io.opelt.messagescheduler.domain.MessageChannel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+
+import io.opelt.messagescheduler.domain.MessageChannel;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
-@AllArgsConstructor
 public class CreateMessageModel {
 
     @NotNull
