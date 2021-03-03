@@ -16,8 +16,9 @@ spec:
         app: app
     spec:
       containers:
-      - image: scheduler:latest
-        name: scheduler
+      - image: message-scheduler:latest
+        name: message-scheduler
+        imagePullPolicy: IfNotPresent
         env:
           - name: DB_USER
             value: postgres
