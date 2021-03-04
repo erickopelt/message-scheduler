@@ -23,7 +23,7 @@
         <jacoco.version>0.8.6</jacoco.version>
         <jacoco.coverage.line>1.0</jacoco.coverage.line>
         <jacoco.branch.coverage>1.0</jacoco.branch.coverage>
-        <pitest-mutation.coverage>94</pitest-mutation.coverage>
+        <pitest-mutation.coverage>100</pitest-mutation.coverage>
         <pitest-mutation.version>1.6.2</pitest-mutation.version>
         <pitest-mutation.junit.version>0.12</pitest-mutation.junit.version>
     </properties>
