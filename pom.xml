@@ -137,6 +137,7 @@
                     <excludes>
                         <exclude>**/MessageSchedulerApplication*</exclude>
                         <exclude>**/MessageEntity_*</exclude>
+                        <exclude>**/SwaggerConfig*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -207,6 +208,9 @@
                     <targetTests>
                         <param>io.opelt.messagescheduler*</param>
                     </targetTests>
+                    <excludedClasses>
+                        <param>io.opelt.messagescheduler.adapter.configuration.SwaggerConfig</param>
+                    </excludedClasses>
                 </configuration>
             </plugin>
             <plugin>
