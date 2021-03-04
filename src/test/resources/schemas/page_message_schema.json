@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "_embedded": {
+      "type": "object",
+      "minItems": 1,
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+              },
+              "schedule": {
+                "type": "string"
+              },
+              "recipient": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              },
+              "channel": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "_links": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "self": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "href": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    },
+                    "required": [
+                      "href"
+                    ]
+                  }
+                },
+                "required": [
+                  "self"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "schedule",
+              "recipient",
+              "body",
+              "channel",
+              "status",
+              "_links"
+            ]
+          }
+        }
+      }
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "size": {
+          "type": "integer"
+        },
+        "totalElements": {
+          "type": "integer"
+        },
+        "totalPages": {
+          "type": "integer"
+        },
+        "number": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "size",
+        "totalElements",
+        "totalPages",
+        "number"
+      ]
+    },
+    "_links": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "self": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "href": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "href"
+          ]
+        }
+      },
+      "required": [
+        "self"
+      ]
+    }
+  }
+}

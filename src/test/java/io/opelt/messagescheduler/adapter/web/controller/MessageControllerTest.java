@@ -59,7 +59,7 @@ class MessageControllerTest {
                 .post("/v1/messages")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body(matchesJsonSchemaInClasspath("message_schema.json"));
+                .body(matchesJsonSchemaInClasspath("schemas/message_schema.json"));
     }
 
     @Test
@@ -190,7 +190,7 @@ class MessageControllerTest {
                 .get("/v1/messages/{id}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body(matchesJsonSchemaInClasspath("message_schema.json"));
+                .body(matchesJsonSchemaInClasspath("schemas/message_schema.json"));
     }
 
 
@@ -268,6 +268,23 @@ class MessageControllerTest {
                 .delete("/v1/messages/{id}")
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    void givenAMessagesWhenGetPageThenReturnResponseWithValidSchema() throws JSONException {
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "MESSAGE");
+        var schedule = LocalDateTime.now().plusMinutes(5).format(ISO_DATE_TIME_FORMAT);
+        createMessage(schedule, "EMAIL");
+
+        RestAssured
+                .given()
+                .queryParam("page", 0)
+                .queryParam("size", 1)
+                .when()
+                .get("/v1/messages")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body(matchesJsonSchemaInClasspath("schemas/page_message_schema.json"));
     }
 
     @Test
