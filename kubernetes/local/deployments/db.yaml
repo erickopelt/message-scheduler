@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  strategy: { }
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - image: postgres:9.6
+          name: postgres
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: db-config
+          ports:
+            - containerPort: 5432
+      volumes:
+        - name: db-pv
+          persistentVolumeClaim:
+            claimName: db-pv-claim

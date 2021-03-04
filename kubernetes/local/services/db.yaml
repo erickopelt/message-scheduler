@@ -6,11 +6,11 @@ metadata:
   name: db
 spec:
   ports:
-  - port: 5432
-    protocol: TCP
-    targetPort: 5432
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432
   selector:
     app: db
   type: ClusterIP
 status:
-  loadBalancer: {}
+  loadBalancer: { }

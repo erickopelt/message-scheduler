@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: scheduler
+  name: scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scheduler
+  strategy: { }
+  template:
+    metadata:
+      labels:
+        app: scheduler
+    spec:
+      containers:
+        - image: message-scheduler:latest
+          name: message-scheduler
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: scheduler-config
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 45
+            periodSeconds: 3

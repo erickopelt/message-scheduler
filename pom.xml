@@ -19,6 +19,10 @@
         <testcontainers.version>1.15.1</testcontainers.version>
         <skip.unit.tests>false</skip.unit.tests>
         <skip.integration.tests>false</skip.integration.tests>
+        <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
+        <jacoco.version>0.8.6</jacoco.version>
+        <jacoco.coverage.line>0.98</jacoco.coverage.line>
+        <jacoco.branch.coverage>0.99</jacoco.branch.coverage>
     </properties>
     <dependencies>
         <dependency>
@@ -44,7 +48,7 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
+            <version>${springfox-boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -67,6 +71,11 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.h2database</groupId>-->
+<!--            <artifactId>h2</artifactId>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -125,7 +134,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.6</version>
+                <version>${jacoco.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -153,12 +162,12 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.98</minimum>
+                                            <minimum>${jacoco.coverage.line}</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.99</minimum>
+                                            <minimum>${jacoco.branch.coverage}</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
