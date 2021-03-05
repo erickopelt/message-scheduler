@@ -12,7 +12,7 @@ A API foi construida no modelo RESTFul utilizando o padrão HATEOAS. A documenta
 
 ### Database migration
 
-Os scripts de migração de base são executados pelo **FlyWay**. Os arquivos estão na pasta src/main/resources/db/migration
+Os scripts de migração de base são executados pelo **FlyWay**. Os arquivos estão na pasta [src/main/resources/db/migration](src/main/resources/db/migration)
 
 ## Build
 
