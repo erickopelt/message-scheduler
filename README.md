@@ -66,7 +66,7 @@ Junto com prometheus o compose também contêm sobe uma instância do grafana co
 
 ### Kubernetes
 
-No diretório [kubernetes](kubernetes) sexiste a configuração para rodar localmente via minikube ou no gke
+No diretório [kubernetes](kubernetes) existe a configuração para rodar localmente via minikube ou no gke
 
 #### minikube (local)
 
