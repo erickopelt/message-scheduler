@@ -2,6 +2,29 @@
 
 Serviço de agendamento de mensagens
 
+Índice
+=================
+
+- [Message scheduler](#message-scheduler)
+  * [Arquitetura](#arquitetura)
+    + [API](#api)
+    + [Database migration](#database-migration)
+  * [Build](#build)
+    + [Requisitos](#requisitos)
+    + [Testes](#testes)
+        * [Testes unitarios](#testes-unitarios)
+        * [Testes Integrados](#testes-integrados)
+        * [Coverage](#coverage)
+  * [Executando](#executando)
+    + [docker-compose](#docker-compose)
+      - [Prometheus](#prometheus)
+      - [Grafana](#grafana)
+    + [Kubernetes](#kubernetes)
+      - [minikube (local)](#minikube--local-)
+          + [Requisitos](#requisitos-1)
+      - [Google Cloud Kubernetes (gke)](#google-cloud-kubernetes--gke-)
+          + [Requisitos](#requisitos-2)
+
 ## Arquitetura
 
 A arquitetura do projeto é baseada no padrão Clean Archictecture. Um exemplo do modelo utilizado com a explicação de cada pacote pode ser consultado nesse [repositório](https://github.com/erickopelt/clean-architecture-spring).
@@ -15,6 +38,12 @@ A API foi construida no modelo RESTFul utilizando o padrão HATEOAS. A documenta
 Os scripts de migração de base são executados pelo **FlyWay**. Os arquivos estão na pasta [src/main/resources/db/migration](src/main/resources/db/migration)
 
 ## Build
+
+### Requisitos
+
+- maven
+- java 11
+- docker
 
 O build é feito pelo maven utilizando o comando 
 
@@ -70,12 +99,17 @@ No diretório [kubernetes](kubernetes) existe a configuração para rodar localm
 
 #### minikube (local)
 
+###### Requisitos
+
+- minikube
+- kubectl
+
 Na versão é local é feito do deploy do postgres e da aplicação.
 
 Primeiro inicie o minikube:
 
 ```
-minkube start
+minikube start
 ```
 
 Após inicializado realize o deploy dos arquivos na seguinte ordem:
@@ -88,6 +122,11 @@ kubectl apply -f deployments/
 ```
 
 #### Google Cloud Kubernetes (gke)
+
+###### Requisitos
+- kubectl
+- terraform
+- gcloud
 
 No gke é realizado apenas o deploy da aplicação e banco de dados é criado no **CloudSQL**.
 
