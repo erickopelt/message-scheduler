@@ -31,7 +31,7 @@ A arquitetura do projeto é baseada no padrão Clean Archictecture. Um exemplo d
 
 ### API 
 
-A API foi construida no modelo RESTFul utilizando o padrão HATEOAS. A documentação está disponivel via Swagger e pode ser acessada pelo no caminho [/swagger-ui](http://localhost:8080/swagger-ui).
+A API foi construida no modelo RESTFul utilizando o padrão HATEOAS. A documentação está disponível via Swagger e pode ser acessada pelo no caminho [/swagger-ui/](http://localhost:8080/swagger-ui/).
 
 ### Database migration
 
@@ -45,7 +45,7 @@ Os scripts de migração de base são executados pelo **FlyWay**. Os arquivos es
 - java 11
 - docker
 
-O build é feito pelo maven utilizando o comando 
+O build é feito pelo maven utilizando o comando: 
 
 ```
 mvn clean install
@@ -55,11 +55,11 @@ Durante o build também é realizado a etapa de testes:
 
 ### Testes
 
-Existem dois tipos de testes na suite, unitários e integrados.
+Existem dois tipos de teste na suite, unitários e integrados.
 
 ##### Testes unitarios
 
-Os testes unitários foram feitos utilzando o **JUnit** e o **Mockito**.
+Os testes unitários foram feitos utilizando o **JUnit** e o **Mockito**.
 
 ##### Testes Integrados
 
@@ -87,11 +87,11 @@ docker-compose up
 
 #### Prometheus
 
-Uma instância do prometheus ficará disponivel na porta ```:9090``` para realizar query's com base nos dados coletados no endpoint [/actuator/prometheus](http://localhost:8080/actuator/prometheus)
+Uma instância do prometheus ficará disponível na porta ```:9090``` para realizar query's com base nos dados coletados no endpoint [/actuator/prometheus](http://localhost:8080/actuator/prometheus)
 
 #### Grafana
 
-Junto com prometheus o compose também contêm sobe uma instância do grafana com o dashboard da aplicação disponivel no link [http://localhost:3000/d/YxadKCyGk/message-scheduler?orgId=1&refresh=30s](http://localhost:3000/d/YxadKCyGk/message-scheduler?orgId=1&refresh=30s), o usuário default é admin com a senha admin, após o login o grafana irá pedir uma nova senha, pode ser colocado qualquer valor.
+Junto do prometheus o compose também contêm sobe uma instância do grafana com o dashboard da aplicação disponível no link [http://localhost:3000/d/YxadKCyGk/message-scheduler?orgId=1&refresh=30s](http://localhost:3000/d/YxadKCyGk/message-scheduler?orgId=1&refresh=30s), o usuário default é admin com a senha admin, após o login o grafana irá pedir uma nova senha, pode ser colocado qualquer valor.
 
 ### Kubernetes
 
@@ -158,13 +158,13 @@ terraform apply
 
 O processo pode ser lento e chegar até 30 minutos de duração.
 
-Após a criação é preciso somente substituir o ip do banco no configmap do aplicação pelo gerado dentro da VPC. O ip é exposto com o comando: 
+Após a criação é preciso somente substituir o ip do banco no configmap da aplicação pelo gerado dentro da VPC. O ip é exposto com o comando: 
 
 ```
 gcloud sql instances describe master-instance | grep ipAddress
 ```
 
-O valor devolvido deve ser copiado para o arquivo [kubernetes/gke/configmap/scheduler.yaml](kubernetes/gke/configmap/scheduler.yaml) na variavel ```DB_URL```.
+O valor devolvido deve ser copiado para o arquivo [kubernetes/gke/configmap/scheduler.yaml](kubernetes/gke/configmap/scheduler.yaml) na variável ```DB_URL```.
 
 Com toda a infra devidamente criada já é possível fazer o deploy dos arquivos do kubernetes, para configurar o ambiente do gke no kubectl local execute o comando:
 
