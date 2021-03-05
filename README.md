@@ -66,7 +66,7 @@ Junto com prometheus o compose também contêm sobe uma instância do grafana co
 
 ### Kubernetes
 
-No diretório [kubernete] sexiste a configuração para rodar localmente via minikube ou no gke
+No diretório [kubernetes](kubernetes) sexiste a configuração para rodar localmente via minikube ou no gke
 
 #### minikube (local)
 
@@ -101,12 +101,13 @@ gcloud config set project io-opelt-message-scheduler
 Para a criação de toda a infraestrutura no **google cloud** foi utilizado o **terraform**. Na configuração criada no diretório ```terraform``` irá ser criado um cluster com um node-pool separado com apenas um nó, um instância do postgresql no CloudSQL com usuário e database e uma VPC para habilitar a comunicação do cluster com o banco.
 
 
- Entre no diretório [terraform] e execute os seguintes comandos:
+ Entre no diretório [terraform](terraform) e execute os seguintes comandos:
 
-``````
+```
 terraform init
 terraform apply
 ```
+
 O processo pode ser lento e chegar até 30 minutos de duração.
 
 Após a criação é preciso somente substituir o ip do banco no configmap do aplicação pelo gerado dentro da VPC. O ip é exposto com o comando: 
@@ -115,7 +116,7 @@ Após a criação é preciso somente substituir o ip do banco no configmap do ap
 gcloud sql instances describe master-instance | grep ipAddress
 ```
 
-O valor devolvido deve ser copiado para o arquivo [kubernetes/gke/configmap/scheduler.yaml] na variavel ```DB_URL```.
+O valor devolvido deve ser copiado para o arquivo [kubernetes/gke/configmap/scheduler.yaml](kubernetes/gke/configmap/scheduler.yaml) na variavel ```DB_URL```.
 
 Com toda a infra devidamente criada já é possível fazer o deploy dos arquivos do kubernetes, para configurar o ambiente do gke no kubectl local execute o comando:
 
