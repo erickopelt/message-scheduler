@@ -6,5 +6,5 @@ metadata:
     app: scheduler
 data:
   DB_USER: postgres
-  DB_URL: jdbc:postgresql://db:5432/postgresdb
+  DB_URL: jdbc:postgresql://db-service:5432/postgresdb
   DB_PASSWORD: postgres123

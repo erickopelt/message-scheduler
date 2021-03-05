@@ -16,7 +16,7 @@ spec:
         app: scheduler
     spec:
       containers:
-        - image: message-scheduler:latest
+        - image: erickopelt/message-scheduler:latest
           name: message-scheduler
           imagePullPolicy: IfNotPresent
           envFrom:
