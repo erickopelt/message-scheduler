@@ -55,7 +55,7 @@ Durante o build também é realizado a etapa de testes:
 
 ### Testes
 
-Existem dois tipos de testes na suite, untarios e integrados.
+Existem dois tipos de testes na suite, unitários e integrados.
 
 ##### Testes unitarios
 
@@ -137,7 +137,7 @@ gcloud projects create io-opelt-message-scheduler
 gcloud config set project io-opelt-message-scheduler
 ```
 
-Para a criação de toda a infraestrutura no **google cloud** foi utilizado o **terraform**. Na configuração criada no diretório ```terraform``` irá ser criado um cluster com um node-pool separado com apenas um nó, um instância do postgresql no CloudSQL com usuário e database e uma VPC para habilitar a comunicação do cluster com o banco.
+Para a criação de toda a infraestrutura no **google cloud** foi utilizado o **terraform**. A configuração criada no diretório [terraform](terraform) cria um cluster com um node-pool separado com apenas um nó, uma instância do postgresql no CloudSQL com usuário e database e uma VPC para habilitar a comunicação do cluster com o banco.
 
 
  Entre no diretório [terraform](terraform) e execute os seguintes comandos:
