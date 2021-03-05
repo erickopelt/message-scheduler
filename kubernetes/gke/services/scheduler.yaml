@@ -8,9 +8,8 @@ spec:
   ports:
     - port: 8080
       protocol: TCP
-      targetPort: 8080
+      nodePort: 30003
+      name: http
   selector:
     app: app
   type: NodePort
-status:
-  loadBalancer: { }

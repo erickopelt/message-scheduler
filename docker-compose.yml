@@ -2,7 +2,7 @@ version: '3'
 services:
   scheduler:
     build: .
-    image: message-scheduler
+    image: erickopelt/message-scheduler
     ports:
       - 8080:8080
     environment:
