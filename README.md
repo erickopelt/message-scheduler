@@ -121,6 +121,15 @@ kubectl apply -f services/
 kubectl apply -f deployments/
 ```
 
+Para acessar a aplicação é preciso executar o comando:
+
+```
+minikube service scheduler-service
+```
+
+Esse comando irá devolver qual o ip e a porta para acessar a aplicação.
+
+
 #### Google Cloud Kubernetes (gke)
 
 ###### Requisitos
@@ -169,6 +178,24 @@ Então realize o deploy da aplicação:
 kubectl apply -f configmap/
 kubectl apply -f services/
 kubectl apply -f deployments/
+```
+
+Para acessar aplicação é preciso liberar a porta criada no firewall. Primeiro descubra o valor da porta com o comando:
+
+```
+kubectl get service scheduler-service -o=yaml | grep nodePort
+```
+
+Crie a regra do firewall com o comando a seguir substituindo ```<PORT>``` pela porta descoberta:
+
+```
+gcloud compute firewall-rules create scheduler-service-node-port --allow tcp:<PORT>
+```
+
+O ip do cluster pode ser consultado com o comando:
+
+```
+kubectl get nodes --output wide
 ```
 
 Caso queria apagar os recursos criados no google-cloud pode se executar o comando:

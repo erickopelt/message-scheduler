@@ -10,7 +10,7 @@ spec:
       protocol: TCP
       targetPort: 8080
   selector:
-    app: app
+    app: scheduler
   type: NodePort
 status:
   loadBalancer: { }

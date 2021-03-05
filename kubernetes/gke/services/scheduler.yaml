@@ -8,8 +8,7 @@ spec:
   ports:
     - port: 8080
       protocol: TCP
-      nodePort: 30003
-      name: http
+      targetPort: 8080
   selector:
-    app: app
+    app: scheduler
   type: NodePort
